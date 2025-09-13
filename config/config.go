@@ -28,9 +28,9 @@ func LoadConfig() *Config {
 		DBHost:    getEnv("DB_HOST", "localhost"),
 		DBPort:    getEnv("DB_PORT", "5432"),
 		DBUser:    getEnv("DB_USER", "postgres"),
-		DBPass:    getEnv("DB_PASS", "kwakwa"),
+		DBPass:    getEnv("DB_PASSWORD", "kwakwa"),
 		DBName:    getEnv("DB_NAME", "finance_tracker"),
-		JwtSecret: getEnv("JWT_SACRET", "token"),
+		JwtSecret: getEnv("JWT_SECRET", "token"),
 	}
 }
 
