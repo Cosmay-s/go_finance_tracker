@@ -5,6 +5,8 @@ go 1.24.3
 require (
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.4
+	gorm.io/driver/postgres v1.6.0
+	gorm.io/gorm v1.31.0
 )
 
 require (
@@ -24,6 +26,4 @@ require (
 	golang.org/x/sync v0.14.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
-	gorm.io/driver/postgres v1.6.0 // indirect
-	gorm.io/gorm v1.31.0 // indirect
 )
