@@ -34,13 +34,13 @@ func (h *AuthHandler) Register(c echo.Context) error {
 
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"ошибка": err.Error(),
+			"error": err.Error(),
 		})
 	}
 
 	if err := c.Validate(req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"ошибка": err.Error(),
+			"error": err.Error(),
 		})
 	}
 	err := h.authService.Register(services.RegisterRequest{
@@ -49,12 +49,12 @@ func (h *AuthHandler) Register(c echo.Context) error {
 	})
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"ошибка": err.Error(),
+			"error": err.Error(),
 		})
 	}
 
 	return c.JSON(http.StatusCreated, map[string]string{
-		"уведомление": "Пользователь создан",
+		"message": "Пользователь создан",
 	})
 }
 
@@ -62,13 +62,13 @@ func (h *AuthHandler) Login(c echo.Context) error {
 	var req LoginRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"ошибка": err.Error(),
+			"error": err.Error(),
 		})
 	}
 
 	if err := c.Validate(req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"ошибка": err.Error(),
+			"error": err.Error(),
 		})
 	}
 	token, err := h.authService.Login(services.LoginRequest{
@@ -78,7 +78,7 @@ func (h *AuthHandler) Login(c echo.Context) error {
 
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{
-			"ошибка": err.Error(),
+			"error": err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, LoginResponse{
