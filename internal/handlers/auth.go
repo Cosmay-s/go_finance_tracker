@@ -7,12 +7,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type AuthHandles struct {
+type AuthHandler struct {
 	authService *services.AuthService
 }
 
-func NewAuthHandler(authService *services.AuthService) *AuthHandles {
-	return &AuthHandles{authService: authService}
+func NewAuthHandler(authService *services.AuthService) *AuthHandler {
+	return &AuthHandler{authService: authService}
 }
 
 type RegisterRequest struct {
@@ -29,7 +29,7 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-func (h *AuthHandles) Register(c echo.Context) error {
+func (h *AuthHandler) Register(c echo.Context) error {
 	var req RegisterRequest
 
 	if err := c.Bind(&req); err != nil {
@@ -55,5 +55,33 @@ func (h *AuthHandles) Register(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, map[string]string{
 		"уведомление": "Пользователь создан",
+	})
+}
+
+func (h *AuthHandler) Login(c echo.Context) error {
+	var req LoginRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"ошибка": err.Error(),
+		})
+	}
+
+	if err := c.Validate(req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"ошибка": err.Error(),
+		})
+	}
+	token, err := h.authService.Login(services.LoginRequest{
+		Email:    req.Email,
+		Password: req.Password,
+	})
+
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{
+			"ошибка": err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, LoginResponse{
+		Token: token,
 	})
 }
