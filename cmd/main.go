@@ -10,8 +10,8 @@ import (
 	"github.com/cosmay-s/go_finance_tracker/internal/repositories"
 	"github.com/cosmay-s/go_finance_tracker/internal/services"
 	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/middleware"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type CustomValidator struct {
@@ -44,12 +44,12 @@ func main() {
 	app.Use(middleware.CORS())
 
 	userRepo := repositories.NewUserRepository(db)
-	authSevice := services.NewAuthService(userRepo, cfg.JwtSecret)
-	authHandler := handlers.NewAuthHandler(authSevice)
+	authService := services.NewAuthService(userRepo, cfg.JwtSecret)
+	authHandler := handlers.NewAuthHandler(authService)
 
 	//ручки
 	app.GET("/", func(c echo.Context) error {
-		return c.String(200, "Приложение запущено - порт:"+cfg.Port)
+		return c.String(200, "Приложение запущено - порт: "+cfg.Port)
 	})
 
 	app.POST("/register", authHandler.Register)
