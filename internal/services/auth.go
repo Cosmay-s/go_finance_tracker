@@ -7,6 +7,7 @@ import (
 	"github.com/cosmay-s/go_finance_tracker/internal/models"
 	"github.com/cosmay-s/go_finance_tracker/internal/repositories"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -74,4 +75,28 @@ func (s *AuthService) Login(req LoginRequest) (string, error) {
 		return "", errors.New("ошибка при генерации токена")
 	}
 	return tokenString, nil
+}
+
+func (s *AuthService) ValidateToken(tokenString string) (uint, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.jwtSecret), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	if !token.Valid {
+		return 0, errors.New("недействительный токен")
+	}
+	if claims, ok := token.Claims.(*Claims); ok {
+		return claims.UserID, nil
+	}
+	return 0, errors.New("неверный формат токена")
+}
+
+func GetUserIDFromContext(c echo.Context) (uint, error) {
+	userID, ok := c.Get("userID").(uint)
+	if !ok {
+		return 0, errors.New("не далось получить ID пользователя")
+	}
+	return userID, nil
 }
