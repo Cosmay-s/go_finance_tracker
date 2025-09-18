@@ -7,6 +7,7 @@ import (
 	"github.com/cosmay-s/go_finance_tracker/internal/models"
 	"github.com/cosmay-s/go_finance_tracker/internal/repositories"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -90,4 +91,12 @@ func (s *AuthService) ValidateToken(tokenString string) (uint, error) {
 		return claims.UserID, nil
 	}
 	return 0, errors.New("неверный формат токена")
+}
+
+func GetUserIDFromContext(c echo.Context) (uint, error) {
+	userID, ok := c.Get("userID").(uint)
+	if !ok {
+		return 0, errors.New("не далось получить ID пользователя")
+	}
+	return userID, nil
 }
