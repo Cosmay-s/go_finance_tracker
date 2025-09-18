@@ -75,3 +75,19 @@ func (s *AuthService) Login(req LoginRequest) (string, error) {
 	}
 	return tokenString, nil
 }
+
+func (s *AuthService) ValidateToken(tokenString string) (uint, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.jwtSecret), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	if !token.Valid {
+		return 0, errors.New("недействительный токен")
+	}
+	if claims, ok := token.Claims.(*Claims); ok {
+		return claims.UserID, nil
+	}
+	return 0, errors.New("неверный формат токена")
+}
